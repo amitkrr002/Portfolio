@@ -9,8 +9,11 @@ import {
   Mail,
   Menu,
   X,
+  Download,
+  Terminal,
 } from "lucide-react";
 import { Button } from "./ui/button";
+import TerminalSection from "./TerminalSection";
 
 const ModernPortfolio: React.FC = () => {
   const [activeSection, setActiveSection] = useState("hero");
@@ -185,10 +188,11 @@ const ModernPortfolio: React.FC = () => {
     const handleScroll = () => {
       const sections = [
         "hero",
-        "projects",
         "skills",
         "competitive",
+        "projects",
         "experience",
+        "education",
         "contact",
       ];
       const currentSection = sections.find((section) => {
@@ -211,6 +215,188 @@ const ModernPortfolio: React.FC = () => {
 
   return (
     <div className="relative bg-black text-white min-h-screen">
+      {/* Fixed Terminal Button */}
+      <motion.div
+        className="fixed bottom-8 left-8 z-50"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1, duration: 0.3 }}
+      >
+        <Button
+          onClick={() => {
+            const terminalSection = document.getElementById("terminal-popup");
+            if (terminalSection) {
+              terminalSection.style.display = "flex";
+            }
+          }}
+          size="lg"
+          className="rounded-full w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 p-0 shadow-lg hover:shadow-xl transition-all duration-300"
+        >
+          <Terminal size={24} />
+        </Button>
+      </motion.div>
+
+      {/* Terminal Popup (Hidden by default) */}
+      <div
+        id="terminal-popup"
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 items-center justify-center p-4 hidden"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            const terminalSection = document.getElementById("terminal-popup");
+            if (terminalSection) {
+              terminalSection.style.display = "none";
+            }
+          }
+        }}
+      >
+        <div
+          className="bg-slate-900/90 backdrop-blur-sm rounded-xl overflow-hidden border border-slate-700 shadow-xl w-full max-w-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center px-4 py-2 bg-slate-800/80 border-b border-slate-700">
+            <div className="flex space-x-2">
+              <div
+                className="w-3 h-3 rounded-full bg-red-500 cursor-pointer hover:bg-red-600 transition-colors"
+                onClick={() => {
+                  const terminalSection =
+                    document.getElementById("terminal-popup");
+                  if (terminalSection) {
+                    terminalSection.style.display = "none";
+                  }
+                }}
+              ></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <div className="flex-1 text-center text-sm text-gray-400 font-mono">
+              amit@portfolio:~
+            </div>
+            <button
+              onClick={() => {
+                const terminalSection =
+                  document.getElementById("terminal-popup");
+                if (terminalSection) {
+                  terminalSection.style.display = "none";
+                }
+              }}
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              <X size={18} />
+            </button>
+          </div>
+          <div
+            className="p-4 h-96 overflow-y-auto font-mono text-sm text-gray-300 bg-black/70"
+            id="terminal-content"
+          >
+            <div className="mb-1">Welcome to Amit Kumar's terminal.</div>
+            <div className="mb-1">Type 'help' to see available commands.</div>
+            <div className="flex items-center">
+              <span className="text-green-400">amit@portfolio:~</span>
+              <span className="text-white"> $ </span>
+              <input
+                type="text"
+                id="terminal-input"
+                className="flex-1 bg-transparent border-none outline-none text-white ml-1"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const input = document.getElementById(
+                      "terminal-input",
+                    ) as HTMLInputElement;
+                    const content = document.getElementById("terminal-content");
+                    if (input && content) {
+                      const command = input.value.trim();
+                      const commandElement = document.createElement("div");
+                      commandElement.className = "mb-1";
+                      commandElement.innerHTML = `<span class="text-green-400">amit@portfolio:~</span><span class="text-white"> $ ${command}</span>`;
+                      content.insertBefore(commandElement, input.parentElement);
+
+                      // Process command
+                      let response = "";
+                      if (command === "help") {
+                        response =
+                          "Available commands:\n- about: Learn about me\n- skills: List my technical skills\n- projects: View my projects\n- experience: See my work experience\n- education: View my education\n- contact: How to reach me\n- resume: Download my resume\n- clear: Clear the terminal\n- exit: Close the terminal";
+                      } else if (command === "about") {
+                        response =
+                          "Amit Kumar - Software Engineer & Problem Solver\nI build exceptional digital experiences with modern technologies.\nSpecializing in creating scalable, user-friendly applications that solve real-world problems.";
+                      } else if (command === "skills") {
+                        response =
+                          "Technical Skills:\n- Frontend: React, Next.js, TypeScript, Tailwind CSS, Framer Motion\n- Backend: Node.js, Express, GraphQL, REST APIs, MongoDB, PostgreSQL\n- DevOps: Docker, AWS, CI/CD, Kubernetes, Terraform\n- Tools: Git, Figma, VS Code, Postman, Jest, Cypress";
+                      } else if (command === "projects") {
+                        response =
+                          "Featured Projects:\n- E-Commerce Platform: A full-stack e-commerce solution with React, Node.js, and MongoDB\n- AI Content Generator: An AI-powered application that generates content based on user prompts\n- Real-time Analytics Dashboard: A dashboard for monitoring real-time data with interactive visualizations";
+                      } else if (command === "experience") {
+                        response =
+                          "Work Experience:\n- Senior Frontend Developer at Tech Innovations Inc. (2021 - Present)\n- Full Stack Developer at Digital Solutions Ltd. (2018 - 2021)\n- Junior Developer at WebCraft Studios (2016 - 2018)";
+                      } else if (command === "education") {
+                        response =
+                          "Education:\n- Master of Computer Science, Stanford University (2018 - 2020)\n- Bachelor of Science in Computer Engineering, MIT (2014 - 2018)\n- Various Professional Certifications (2018 - Present)";
+                      } else if (command === "contact") {
+                        response =
+                          "Contact Information:\n- Email: contact@amitkumar.dev\n- GitHub: github.com/amitkumar";
+                      } else if (command === "resume") {
+                        response = "Downloading resume...";
+                        setTimeout(() => {
+                          const link = document.createElement("a");
+                          link.href = "/resume.pdf";
+                          link.download = "Amit_Kumar_Resume.pdf";
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }, 500);
+                      } else if (command === "clear") {
+                        while (content.firstChild) {
+                          if (content.lastChild === input.parentElement) {
+                            break;
+                          }
+                          content.removeChild(content.firstChild);
+                        }
+                        const welcomeElement = document.createElement("div");
+                        welcomeElement.className = "mb-1";
+                        welcomeElement.textContent =
+                          "Welcome to Amit Kumar's terminal.";
+                        const helpElement = document.createElement("div");
+                        helpElement.className = "mb-1";
+                        helpElement.textContent =
+                          "Type 'help' to see available commands.";
+                        content.insertBefore(helpElement, input.parentElement);
+                        content.insertBefore(welcomeElement, helpElement);
+                        input.value = "";
+                        return;
+                      } else if (command === "exit") {
+                        const terminalSection =
+                          document.getElementById("terminal-popup");
+                        if (terminalSection) {
+                          terminalSection.style.display = "none";
+                        }
+                        return;
+                      } else if (command !== "") {
+                        response = `Command not recognized: ${command}\nType 'help' for available commands`;
+                      }
+
+                      if (response) {
+                        const lines = response.split("\n");
+                        lines.forEach((line) => {
+                          const responseElement = document.createElement("div");
+                          responseElement.className = "mb-1";
+                          responseElement.textContent = line;
+                          content.insertBefore(
+                            responseElement,
+                            input.parentElement,
+                          );
+                        });
+                      }
+
+                      input.value = "";
+                      content.scrollTop = content.scrollHeight;
+                    }
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
       {/* Custom cursor */}
       <div
         ref={cursorRef}
@@ -237,10 +423,11 @@ const ModernPortfolio: React.FC = () => {
           <nav className="hidden md:flex space-x-8">
             {[
               "hero",
-              "projects",
               "skills",
               "competitive",
+              "projects",
               "experience",
+              "education",
               "contact",
             ].map((section) => (
               <motion.button
@@ -254,19 +441,65 @@ const ModernPortfolio: React.FC = () => {
                   ? "Home"
                   : section === "competitive"
                     ? "Coding"
-                    : section}
+                    : section === "education"
+                      ? "Education"
+                      : section}
               </motion.button>
             ))}
           </nav>
 
-          {/* Mobile menu button */}
-          <motion.button
-            className="md:hidden text-white"
-            onClick={() => setMenuOpen(!menuOpen)}
-            whileTap={{ scale: 0.9 }}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="hidden md:block"
           >
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </motion.button>
+            <Button
+              onClick={() => {
+                const link = document.createElement("a");
+                link.href = "/resume.pdf";
+                link.download = "Amit_Kumar_Resume.pdf";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white flex items-center gap-2"
+            >
+              <Download size={16} />
+              Resume
+            </Button>
+          </motion.div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center gap-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Button
+                onClick={() => {
+                  const link = document.createElement("a");
+                  link.href = "/resume.pdf";
+                  link.download = "Amit_Kumar_Resume.pdf";
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                size="sm"
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+              >
+                <Download size={16} />
+              </Button>
+            </motion.div>
+            <motion.button
+              className="text-white"
+              onClick={() => setMenuOpen(!menuOpen)}
+              whileTap={{ scale: 0.9 }}
+            >
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </motion.button>
+          </div>
         </div>
       </header>
 
@@ -283,10 +516,11 @@ const ModernPortfolio: React.FC = () => {
             <div className="flex flex-col space-y-6 items-center">
               {[
                 "hero",
-                "projects",
                 "skills",
                 "competitive",
+                "projects",
                 "experience",
+                "education",
                 "contact",
               ].map((section) => (
                 <motion.button
@@ -300,7 +534,9 @@ const ModernPortfolio: React.FC = () => {
                     ? "Home"
                     : section === "competitive"
                       ? "Coding"
-                      : section}
+                      : section === "education"
+                        ? "Education"
+                        : section}
                 </motion.button>
               ))}
             </div>
@@ -738,6 +974,135 @@ const solveProblems = (
                 </div>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Education Section */}
+      <section id="education" className="py-20 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Education</h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              My academic background and continuous learning journey.
+            </p>
+          </motion.div>
+
+          <div className="max-w-3xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, margin: "-100px" }}
+              className="mb-12 relative pl-8 border-l-2 border-slate-800"
+            >
+              <div className="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-black"></div>
+              <div className="bg-slate-900/50 backdrop-blur-sm rounded-xl p-6 border border-slate-800 hover:border-primary/50 transition-all duration-300">
+                <h3 className="text-xl font-bold text-white">
+                  Master of Computer Science
+                </h3>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-primary">Stanford University</span>
+                  <span className="text-gray-500 text-sm">2018 - 2020</span>
+                </div>
+                <p className="text-gray-400 mb-4">
+                  Specialized in Artificial Intelligence and Machine Learning
+                  with a focus on Natural Language Processing.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-xs bg-slate-800 text-blue-400 px-2 py-1 rounded-full">
+                    GPA: 3.9/4.0
+                  </span>
+                  <span className="text-xs bg-slate-800 text-blue-400 px-2 py-1 rounded-full">
+                    Dean's List
+                  </span>
+                  <span className="text-xs bg-slate-800 text-blue-400 px-2 py-1 rounded-full">
+                    Research Assistant
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              className="mb-12 relative pl-8 border-l-2 border-slate-800 last:mb-0"
+            >
+              <div className="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-black"></div>
+              <div className="bg-slate-900/50 backdrop-blur-sm rounded-xl p-6 border border-slate-800 hover:border-primary/50 transition-all duration-300">
+                <h3 className="text-xl font-bold text-white">
+                  Bachelor of Science in Computer Engineering
+                </h3>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-primary">
+                    Massachusetts Institute of Technology
+                  </span>
+                  <span className="text-gray-500 text-sm">2014 - 2018</span>
+                </div>
+                <p className="text-gray-400 mb-4">
+                  Graduated with honors. Completed coursework in Data
+                  Structures, Algorithms, Computer Architecture, and Software
+                  Engineering.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-xs bg-slate-800 text-blue-400 px-2 py-1 rounded-full">
+                    GPA: 3.8/4.0
+                  </span>
+                  <span className="text-xs bg-slate-800 text-blue-400 px-2 py-1 rounded-full">
+                    Cum Laude
+                  </span>
+                  <span className="text-xs bg-slate-800 text-blue-400 px-2 py-1 rounded-full">
+                    Hackathon Winner
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true, margin: "-100px" }}
+              className="relative pl-8 border-l-2 border-slate-800 last:mb-0"
+            >
+              <div className="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-black"></div>
+              <div className="bg-slate-900/50 backdrop-blur-sm rounded-xl p-6 border border-slate-800 hover:border-primary/50 transition-all duration-300">
+                <h3 className="text-xl font-bold text-white">
+                  Certifications & Continuous Learning
+                </h3>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-primary">Various Platforms</span>
+                  <span className="text-gray-500 text-sm">2018 - Present</span>
+                </div>
+                <p className="text-gray-400 mb-4">
+                  Continuously expanding my knowledge through professional
+                  certifications and online courses.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-xs bg-slate-800 text-blue-400 px-2 py-1 rounded-full">
+                    AWS Certified Solutions Architect
+                  </span>
+                  <span className="text-xs bg-slate-800 text-blue-400 px-2 py-1 rounded-full">
+                    Google Cloud Professional
+                  </span>
+                  <span className="text-xs bg-slate-800 text-blue-400 px-2 py-1 rounded-full">
+                    TensorFlow Developer
+                  </span>
+                  <span className="text-xs bg-slate-800 text-blue-400 px-2 py-1 rounded-full">
+                    React Advanced Patterns
+                  </span>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>

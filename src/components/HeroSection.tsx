@@ -33,7 +33,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   onScrollToContact = () => console.log("Scroll to contact"),
 }) => {
   return (
-    <section className="min-h-screen flex items-center justify-center bg-background px-4 py-20 md:py-0">
+    <section className="min-h-screen flex items-center justify-center bg-background px-4 py-20 md:py-0 relative">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
         <motion.div
           className="flex-1 text-center md:text-left"
